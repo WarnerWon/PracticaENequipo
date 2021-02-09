@@ -27,12 +27,20 @@ Route.group(()=>{
   Route.get('show/:id?','UsuarioController.getUser')
   Route.get('User/:id?','UsuarioController.index')
   Route.delete('User/:id','UsuarioController.Delete')
+
   Route.post('Persona/','PersonaController.store')
   Route.get('Persona/:id?','PersonaController.index')
   Route.delete('Persona/:id','PersonaController.Delete')
   Route.put('Persona/:id','PersonaController.Update')
+  
   Route.post('Producto/','ProductoController.store')
   Route.get('Producto/:id?','ProductoController.index')
   Route.delete('Producto/:id','ProductoController.Delete')
   Route.put('Producto/:id','ProductoController.Update')
+
+  Route.post('Comentario/','ComentarioController.store')
+  Route.get('Comentario/:id?','ComentarioController.index')
+  Route.delete('Comentario/:id','ComentarioController.Delete')
+  Route.put('Comentario/:id','ComentarioController.Update')
+
 }).middleware('auth');

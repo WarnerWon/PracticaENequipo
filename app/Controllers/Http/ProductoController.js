@@ -8,7 +8,7 @@ class ProductoController {
             Nombre: 'required|min:2|max:60',
             Descripcion: 'required|min:2|max:60',
             Fechadeexpiracion: 'required|min:2|max:60',
-            Existenciadecantidad	: 'required|max:1',
+            Existenciadecantidad: 'required|max:1',
             Persona: 'required',
           }
           const validation = await validate(input, rules)
