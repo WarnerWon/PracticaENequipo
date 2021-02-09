@@ -1,31 +1,50 @@
 'use strict'
 const producto= use('App/Models/Producto')
 const { validate  } = use('Validator')
+const Helpers = use('Helpers')
+
 class ProductoController {
+
     async store({ request, response }) {
+
+        const profilePic = request.file('Foto', {
+            types: ['image'],
+            extnames: ['png','jpg']
+        })
+
         const input = request.all()
+
         const rules = {
             Nombre: 'required|min:2|max:60',
             Descripcion: 'required|min:2|max:60',
             Fechadeexpiracion: 'required|min:2|max:60',
             Existenciadecantidad: 'required|max:1',
             Persona: 'required',
-          }
-          const validation = await validate(input, rules)
+        }
+
+        const validation = await validate(input, rules)
         if(validation.fails()){
             return response.status(400).json(validation.messages())
         }
-       if (producto.create(input)){
-       return response.json(
-           {
-              rer:true,
-              message:"registro insertado correctamente" 
-           }
-       )
+        await profilePic.move(Helpers.publicPath('producto'), {
+            name: request.input('Nombre') + '.jpg',
+            overwrite: true
+        })
+
+        input['Foto'] = input['Nombre'] + '.jpg'
+
+        if (await producto.create(input)){
+            return response.json(
+                {
+                    rer:true,
+                    message:"registro insertado correctamente" 
+                }
+            )
          //VALIDACIONES
-      }
-      }
-      async index({response,params=id}){
+        }
+    }
+
+    async index({response,params=id}){
         if (params.id)
         {
             return response.status(200).json(['Producto',await producto.findOrFail(params.id)]) 

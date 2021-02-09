@@ -2,9 +2,16 @@
 const persona= use('App/Models/Persona')
 const { validate  } = use('Validator')
 const Database = use('Database')
+const Helpers = use('Helpers')
 
 class PersonaController {
     async store({ request, response,auth }) {
+        
+        const profilePic = request.file('Foto', {
+            types: ['image'],
+            extnames: ['png','jpg']
+          })
+        
         const input = request.all()
         const rules = {
             Nombre: 'required|min:2|max:60',
@@ -14,11 +21,21 @@ class PersonaController {
             Edad: 'required',
             Telefono: 'required',
             Usuario:'required'
-          }
-          const validation = await validate(input, rules)
+        }
+        
+        const validation = await validate(input, rules)
+        
         if(validation.fails()){
             return response.status(400).json(validation.messages())
         }
+        
+        await profilePic.move(Helpers.publicPath('avatar'), {
+            name: request.input('Nombre') + '.jpg',
+            overwrite: true
+        })
+
+        input['Foto'] = input['Nombre'] + '.jpg'
+
         var contador = 0;
         const p= await Database.select('Usuario').from('personas')
         for (const valor of p) 
@@ -40,13 +57,8 @@ class PersonaController {
               //VALIDACIONES
            }
         }
-            return response.json(
-                {
-                   rer:true,
-                   message:"Ya se creo anteriormente" 
-                }
-            )
-            }
+        return response.json({rer:true,message:"Ya se creo anteriormente"})
+    }
    
       
     
