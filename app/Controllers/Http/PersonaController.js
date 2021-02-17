@@ -34,7 +34,7 @@ class PersonaController {
             overwrite: true
         })
 
-        input['Foto'] = input['Nombre'] + '.jpg'
+        input['Foto'] = '/avatar/' + input['Nombre'] + '.jpg'
 
         var contador = 0;
         const p= await Database.select('Usuario').from('personas')
